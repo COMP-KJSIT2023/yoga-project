@@ -1,0 +1,20 @@
+main-bg-about-us{
+    display: flex;
+    justify-content: space-between; 
+    align-items: center;
+}
+image-left{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+}
+image-yoga{
+    display: block;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    background: url(/public/statics/yoga2.jpg) no-repeat;
+    width: 180px; /* Width of new image */
+    height: 236px;
+}

@@ -1,10 +1,23 @@
 body{
   background-image: url('/public/statics/yoga.jpg');
-  opacity: 1;
   background-size: cover;
-  background-position: center;
+  overflow: hidden;
+}
+
+.container-outer{
+  position: absolute;
   height: 100%;
-  width: 100%;
-  margin-left: 60px;
-  padding: 0;
+  width: 100%-100px;
+  margin-left: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container{
+  background-color: white;
+  width: 70%;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
 }
