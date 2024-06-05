@@ -1,20 +1,25 @@
-main-bg-about-us{
+.main-bg-about-us{
     display: flex;
-    justify-content: space-between; 
+    justify-content: space-evenly; 
     align-items: center;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    left: 0;
 }
-image-left{
+.image-left{
     display: flex;
+    align-items: center;
     justify-content: center;
-    align-items: center;
-    height: 100vh;
-    width: 100vw;
+    content: url('/public/statics/yoga2.jpg');
+    height: 100%;
+    width: 50%;
 }
-image-yoga{
+
+.content-right{
     display: block;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    background: url(/public/statics/yoga2.jpg) no-repeat;
-    width: 180px; /* Width of new image */
-    height: 236px;
+    padding: 10px;
+    height: 100%;
+    width: 50%;
+    overflow-y: auto;
 }
