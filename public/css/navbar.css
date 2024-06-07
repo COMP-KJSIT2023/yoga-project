@@ -1,0 +1,63 @@
+body {
+    padding: 20px;
+    font-family: Helvetica, sans-serif;
+  }
+  
+  nav {
+    display: grid;
+    align-items: center;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    background-color: #111;
+    padding: 15px 10px;
+  }
+  nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 20px 0;
+  }
+  nav ul li {
+    padding: 20px 0;
+    cursor: pointer;
+    color: #fff;
+    transition: color .1s;
+    position: relative;
+  }
+  nav ul li:hover {
+    color: #38e;
+  }
+  
+  .tooltipp-container {
+    position: relative;
+  }
+  .tooltipp-container:hover .tooltipp {
+    display: inline-block;
+    top: 10px;
+    left: 64px;
+  }
+  
+  .tooltipp {
+    display: none;
+    padding: 8px 12px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #111;
+    color: #fafafa;
+    border-radius: 4px;
+    position: absolute;
+    z-index: 2;
+  }
+  
+  .tooltip:before {
+    content: "";
+    background-color: #111;
+    transform: rotate(45deg);
+    position: absolute;
+    width: 0.8em;
+    height: 0.8em;
+    left: -0.25em;
+    top: 0.65em;
+    z-index: 1;
+  }

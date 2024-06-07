@@ -1,0 +1,50 @@
+/* body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container {
+    flex: 1;
+} */
+
+body {
+    background-image: url('/assets/yoga.jpg');
+    background-size: cover;
+    overflow: hidden;
+    font-family: 'Syne', sans-serif;
+}
+
+.container-outer {
+    position: absolute;
+    height: 100vh;
+    width: 90vw;
+    margin-left: 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    background-color: white;
+    position: relative;
+    width: 70vw;
+    height: 70vh;
+    overflow: auto;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.navbar {
+    height: 5rem;
+    background-color: white;
+}
+
+.nav-link {
+    color: white;
+}
+
+.nav-link:hover {
+    color: rgb(0, 110, 255);
+}
