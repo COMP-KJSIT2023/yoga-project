@@ -1,0 +1,98 @@
+<style>
+    .appointment-section{
+        padding: 20px;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+    }
+    
+    .appointments-container{
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .past{
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .up{
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .up-appointment{
+        border: 2px solid black;
+        color: black;
+        display: flex;
+        border-radius: 15px;
+        margin: 20px;
+        width: 90%;
+        padding: 10px 30px;
+    }
+    
+    .past-appointment{
+        border: 2px solid black;
+        color: black;
+        display: flex;
+        border-radius: 15px;
+        margin: 20px;
+        width: 90%;
+        padding: 10px 30px;
+    }
+    
+    .past-appointment p,.up-appointment p{
+        margin: 10px;
+    }
+    
+    .up-appointment button{
+        border: none;
+        outline: none;
+        border-radius: 16px;
+        margin-left: 60%;
+        background-color: #111;
+        color: white;
+        padding: 2px 20px;
+    }
+    
+    .past-appointment img,.up-appointment img{
+        border-radius: 50%;
+    }
+</style>
+
+<% layout('/layouts/boilerplate') %>
+
+<div class='appointment-section'>
+    <h3>My Appointments</h3>
+    <div class='appointments-container'>
+        <div class='upcoming'>
+            <h4>Upcoming</h4>
+            <div class='up-appointment'>
+                <img src="https://via.placeholder.com/50" alt="" />
+                <p>XYZ </p>
+                <p>date-time</p> 
+                <button>cancel</button>
+            </div>
+            <div class='up-appointment'>
+                <img src="https://via.placeholder.com/50" alt="" />
+                <p>XYZ</p>
+                <p>date-time</p> 
+                <button>cancel</button>
+            </div>
+        </div>
+        <div class='past'>
+            <h4>Past</h4>
+            <div class='past-appointment'>
+                <img src="https://via.placeholder.com/50" alt="" />
+                <p>XYZ</p>
+                <p>date-time</p>
+            </div>
+            <div class='past-appointment'>
+                <img src="https://via.placeholder.com/50" alt="" />
+                <p>XYZ</p>
+                <p>date-time</p>
+            </div>
+        </div>
+    </div>
+</div>
