@@ -6,7 +6,7 @@
 }
 
 :root {
-    --primary-color: #c6c3c3;
+    --primary-color: #069370;
     --second-color: #ffffff;
     --black-color: #000000;
 }
@@ -29,13 +29,13 @@ a:hover {
 }
 
 .wrapper {
-    width: 100%;
+    /* width: 100%; */
     display: flex;
     justify-content: center;
     align-items: center;
-    /* min-height: 100vh; */
     margin: 2rem 0;
     background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 15px;
 }
 
 .login_box {
@@ -112,10 +112,6 @@ a:hover {
     outline: none;
 }
 
-#user {
-    margin-bottom: 10px;
-}
-
 .label {
     position: absolute;
     top: 15px;
@@ -124,9 +120,7 @@ a:hover {
 }
 
 .input-field:focus~.label,
-.input-field:valid .label {
-    /* Added missing closing brace here */
-    position: absolute;
+.input-field:valid~.label {
     top: -10px;
     left: 20px;
     font-size: 14px;
@@ -135,8 +129,6 @@ a:hover {
     color: var(--black-color);
     padding: 0 10px;
 }
-
-/* Closed the missing brace */
 
 .icon {
     position: absolute;

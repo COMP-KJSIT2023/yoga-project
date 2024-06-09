@@ -5,15 +5,18 @@
         <nav>
             <ul>
                 <li><a href="/">Home</a></li>
-                <li><a href="#">Dashboard</a></li>
-                <li><a href="#">Book Appointment</a></li>
+                <% if(currUser) { %>
+                    <li><a href="#">Dashboard</a></li>
+                <% } %>
+                <li><a href="#">Services</a></li>
+                <li><a href="#">Chants</a></li>
                 <li><a href="/about">About</a></li>
                 <li><a href="#">Contact</a></li>
                 <% if(!currUser) { %>
                     <li><a href="/login">Log in</a></li>
-                    <% } else { %>
-                        <li><a href="/logout">Log out</a></li>
-                        <% } %>
+                <% } else { %>
+                    <li><a href="/logout">Log out</a></li>
+                <% } %>
             </ul>
         </nav>
         <div class="clear"></div>

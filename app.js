@@ -14,6 +14,8 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require("./models/user.js");
 const { saveRedirectUrl } = require('./middleware.js');
+const crypto = require('crypto');
+const nodemailer = require('nodemailer');
 
 const MONGO_URL = 'mongodb://127.0.0.1:27017/yoga-website';
 
@@ -103,7 +105,7 @@ app.post('/signup', async (req, res) => {
             if(err) {
                 next(err);
             }
-            req.flash("success", "Welcome to Wanderlust!");
+            req.flash("success", "Welcome to Yoga.Fitnesse!");
             res.redirect("/");
         });
     } catch (e) {
@@ -117,7 +119,7 @@ app.get('/login', (req, res) => {
 });
 
 app.post('/login', saveRedirectUrl, passport.authenticate("local", { failureRedirect: '/login', failureFlash: true }),  async (req, res) => {
-    req.flash("success", "Welcome back!");
+    req.flash("success", "Welcome to Yoga.Fitnesse!");
     let redirectUrl = res.locals.redirectUrl || "/";
     res.redirect(redirectUrl);
 });
@@ -130,6 +132,107 @@ app.get("/logout", (req, res, next) => {
         req.flash("success", "You are logged out!");
         res.redirect("/");
     });
+});
+
+app.get('/forgot', (req, res) => {
+    res.render('users/forgot.ejs');
+});
+
+app.post('/forgot', async (req, res) => {
+    try {
+        const token = crypto.randomBytes(20).toString('hex');
+        const user = await User.findOne({ email: req.body.email });
+        if (!user) {
+            req.flash('error', 'No account with that email address exists.');
+            return res.redirect('/forgot');
+        }
+
+        user.resetPasswordToken = token;
+        user.resetPasswordExpires = Date.now() + 600000; // 10 minutes
+        await user.save();
+
+        const smtpTransport = nodemailer.createTransport({
+            service: 'Gmail',
+            auth: {
+                user: 'masunavivek7208@gmail.com',
+                pass: 'skay zvxq pqcg ykwg',
+            },
+        });
+
+        const mailOptions = {
+            to: user.email,
+            from: 'masunavivek7208@gmail.com',
+            subject: 'Password Reset',
+            text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.
+            Please click on the following link, or paste this into your browser to complete the process: http://${req.headers.host}/reset/${token}
+            If you did not request this, please ignore this email and your password will remain unchanged.`,
+        };
+
+        await smtpTransport.sendMail(mailOptions);
+        req.flash('success', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
+        res.redirect('/forgot');
+    } catch (err) {
+        req.flash('error', 'Something went wrong. Please try again.');
+        console.log(err);
+        res.redirect('/forgot');
+    }
+});
+
+app.get('/reset/:token', async (req, res) => {
+    try {
+        const user = await User.findOne({
+            resetPasswordToken: req.params.token,
+            resetPasswordExpires: { $gt: Date.now() },
+        });
+        if (!user) {
+            req.flash('error', 'Password reset token is invalid or has expired.');
+            return res.redirect('/forgot');
+        }
+        res.render('users/reset.ejs', { token: req.params.token });
+    } catch (err) {
+        req.flash('error', 'Something went wrong. Please try again.');
+        res.redirect('/forgot');
+    }
+});
+
+app.post('/reset/:token', async (req, res) => {
+    try {
+        const user = await User.findOne({
+            resetPasswordToken: req.params.token,
+            resetPasswordExpires: { $gt: Date.now() },
+        });
+        if (!user) {
+            req.flash('error', 'Password reset token is invalid or has expired.');
+            return res.redirect('/forgot');
+        }
+
+        if (req.body.password === req.body.confirm) {
+            user.setPassword(req.body.password, async (err) => {
+                if (err) {
+                    req.flash('error', 'Something went wrong. Please try again.');
+                    return res.redirect('/forgot');
+                }
+                user.resetPasswordToken = undefined;
+                user.resetPasswordExpires = undefined;
+
+                await user.save();
+                req.logIn(user, (err) => {
+                    if (err) {
+                        req.flash('error', 'Something went wrong. Please try again.');
+                        return res.redirect('/forgot');
+                    }
+                    req.flash('success', 'Success! Your password has been changed.');
+                    res.redirect('/');
+                });
+            });
+        } else {
+            req.flash('error', 'Passwords do not match.');
+            res.redirect('back');
+        }
+    } catch (err) {
+        req.flash('error', 'Something went wrong. Please try again.');
+        res.redirect('/forgot');
+    }
 });
 
 app.listen(port, () => {

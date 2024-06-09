@@ -1,32 +1,39 @@
 <% layout('/layouts/boilerplate') %>
 
-    <style>
-        .signup {
-            color: white;
-        }
-    </style>
+<body>
+    <form method="post" action="/signup" novalidate class="needs-validation">
+        <div class="wrapper">
+            <div class="login_box">
+                <div class="login-header">
+                    <span>Register</span>
+                </div>
 
-    <body>
-        <div class="row mt-3 signup">
-            <h1 class="col-8 offset-2">SignUp</h1>
-            <div class="col-8 offset-2">
-                <form method="post" action="/signup" novalidate class="needs-validation">
-                    <div class="mb-3">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" name="username" id="username" class="form-control" required>
-                        <div class="valid-feedback">Looks good!</div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label">Email</label>
-                        <input type="email" name="email" id="email" class="form-control" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" name="password" id="password" class="form-control" required>
-                    </div>
-                    <button class="btn btn-success mt-3 mb-4">SignUp</button>
-                </form>
+                <div class="input_box">
+                    <input type="text" id="user" name="username" class="input-field" required>
+                    <label for="user" class="label">Username</label>
+                    <i class="bx bx-user icon"></i>
+                </div>
+
+                <div class="input_box">
+                    <input type="email" id="email" name="email" class="input-field" required>
+                    <label for="email" class="label">Email</label>
+                    <i class='bx bx-envelope icon'></i>
+                </div>
+
+                <div class="input_box">
+                    <input style="margin-bottom: 10px;" type="password" name="password" id="pass" class="input-field" required>
+                    <label for="pass" class="label">Password</label>
+                    <i class="bx bx-lock-alt icon"></i>
+                </div>
+
+                <div class="input_box">
+                    <input type="submit" class="input-submit" value="Register">
+                </div>
+
+                <div class="register">
+                    <span>Already Registered? <a href="/login">Login</a></span>
+                </div>
             </div>
         </div>
-    </body>
-    
+    </form>
+</body>

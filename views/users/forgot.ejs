@@ -1,0 +1,22 @@
+<% layout('/layouts/boilerplate') %>
+
+<body>
+    <div class="wrapper">
+        <div class="login_box">
+            <div style="width: 300px;" class="login-header">
+                <span>Forgot Password</span>
+            </div>
+
+            <form action="/forgot" method="POST">
+                <div class="input_box">
+                    <input type="email" name="email" class="input-field" required>
+                    <label for="email" class="label">Email Address</label>
+                    <i class="bx bx-envelope icon"></i>
+                </div>
+                <div class="input_box">
+                    <input type="submit" class="input-submit" value="Reset Password">
+                </div>
+            </form>
+        </div>
+    </div>
+</body>

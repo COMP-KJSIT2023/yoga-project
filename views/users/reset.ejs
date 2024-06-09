@@ -1,0 +1,27 @@
+<% layout('/layouts/boilerplate') %>
+
+<body>
+    <div class="wrapper">
+        <div class="login_box">
+            <div style="width: 300px;" class="login-header">
+                <span>Reset Password</span>
+            </div>
+
+            <form action="/reset/<%= token %>" method="POST">
+                <div class="input_box">
+                    <input type="password" name="password" class="input-field" required>
+                    <label for="password" class="label">New Password</label>
+                    <i class="bx bx-lock icon"></i>
+                </div>
+                <div class="input_box">
+                    <input type="password" name="confirm" class="input-field" required>
+                    <label for="confirm" class="label">Confirm Password</label>
+                    <i class="bx bx-lock icon"></i>
+                </div>
+                <div class="input_box">
+                    <input type="submit" class="input-submit" value="Reset Password">
+                </div>
+            </form>
+        </div>
+    </div>
+</body>

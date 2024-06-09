@@ -6,7 +6,10 @@ const userSchema = new Schema({
     email: {
         type: String,
         required: true,
+        unique: true
     },
+    resetPasswordToken: String,
+    resetPasswordExpires: Date,
 });
 
 userSchema.plugin(passportLocalMongoose);
