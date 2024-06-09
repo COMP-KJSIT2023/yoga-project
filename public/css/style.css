@@ -1,31 +1,19 @@
 body {
-    background-image: url('/assets/yoga.jpg');
+    background-image: url('/assets/yoga_b.jpg');
     background-repeat: no-repeat;
     background-size: cover;
-    overflow: hidden;
+    background-position: center;
+    /* overflow: hidden; */
     font-family: 'Syne', sans-serif;
-    display: flex;
-    flex-direction: column;
     min-height: 100vh;
 }
 
-.container-outer {
-    /* position: absolute; */
-    /* height: 100vh; */
-    /* width: 90vw; */
-    margin-left: 100px;
-    flex: 1;
-}
-
 .container {
-    background-color: white;
-    /* position: relative; */
-    margin-top: 100px;
-    width: 70vw;
-    height: 70vh;
-    overflow: auto;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    flex: 1;
 }
 
 .navbar {

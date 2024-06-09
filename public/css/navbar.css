@@ -1,71 +1,121 @@
+@import url('https://fonts.googleapis.com/css?family=Noto+Serif+SC&display=swap');
+@import url(responsive.css);
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Noto+Serif+SC', sans-serif;
+  background-image: "/assets/yoga.png";
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  box-sizing: border-box;
+}
+
+header {
+  position: relative;
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 10px;
+  background: #FFF;
+  border-radius: 4px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, .2);
+}
+
+.logo {
+  float: left;
+  text-align: center;
+  line-height: 60px;
+  font-size: 2rem;
+  padding: 0 20px;
+  color: #069370;
+  font-weight: 700;
+  text-decoration: none;
+}
+
 nav {
-  display: grid;
-  align-items: center;
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  background-color: #111;
-  padding: 15px 10px;
+  float: right;
+}
+
+.clear {
+  clear: both;
 }
 
 nav ul {
-  list-style-type: none;
   margin: 0;
-  padding: 20px 0;
+  padding: 0;
+  display: flex;
 }
 
 nav ul li {
-  padding: 20px 0;
-  cursor: pointer;
+  list-style: none;
+}
+
+nav ul li a {
+  display: block;
+  margin: 10px 0;
+  padding: 10px 20px;
+  text-decoration: none;
+  color: #262626;
+}
+
+nav ul li a.active,
+nav ul li a:hover {
+  background: #069370;
   color: #fff;
-  transition: color .1s;
-  position: relative;
+  transition: 0.5s;
+  text-decoration: none;
 }
 
-nav ul li:hover {
-  color: #38e;
+@media (max-width: 1200px) {
+  header {
+    margin: 20px;
+  }
 }
 
-.tooltipp-container {
-  position: relative;
-}
+@media (max-width: 1003px) {
+  .logo {
+    font-size: 1.5rem;
+  }
 
-.tooltipp-container:hover .tooltipp {
-  display: inline-block;
-  top: 10px;
-  left: 64px;
-}
+  .mean-toggle {
+    display: block;
+    width: auto;
+    height: auto;
+    margin: 10px;
+    float: right;
+    cursor: pointer;
+    text-align: center;
+    font-size: 30px;
+    color: #069370;
+  }
 
-.tooltipp {
-  display: none;
-  padding: 8px 12px;
-  font-size: 16px;
-  font-weight: bold;
-  background-color: #111;
-  color: #fafafa;
-  border-radius: 4px;
-  position: absolute;
-  z-index: 2;
-}
+  .mean-toggle:before {
+    content: '\f0c9';
+    font-family: fontAwesome;
+    line-height: 40px;
+  }
 
-.tooltip:before {
-  content: "";
-  background-color: #111;
-  transform: rotate(45deg);
-  position: absolute;
-  width: 0.8em;
-  height: 0.8em;
-  left: -0.25em;
-  top: 0.65em;
-  z-index: 1;
-}
+  .mean-toggle.active:before {
+    content: '\f00d';
+  }
 
-.nav-link {
-  color: white !important;
-}
+  nav {
+    display: none;
+  }
 
-.nav-link:hover {
-  color: rgb(0, 110, 255) !important;
-  text-decoration: none !important;
+  nav.active {
+    display: block;
+    width: 100%;
+  }
+
+  nav.active ul {
+    display: block;
+  }
+
+  nav.active ul li {
+    margin: 0;
+    text-align: center;
+  }
 }
