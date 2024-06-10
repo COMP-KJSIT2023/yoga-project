@@ -1,0 +1,282 @@
+<% layout('/layouts/boilerplate') %>
+
+    <style>
+.contact-wrap {
+    background: transparent;
+}
+h3 {
+    color: white;
+}
+
+.form-control {
+    height: 62px;
+    background: transparent;
+    color: #fff !important;
+    font-size: 16px;
+    border-radius: 0px;
+    box-shadow: none !important;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+
+    &::-webkit-input-placeholder {
+        /* Chrome/Opera/Safari */
+        color: #fff !important;
+    }
+
+    &::-moz-placeholder {
+        /* Firefox 19+ */
+        color: #fff !important;
+    }
+
+    &:-ms-input-placeholder {
+        /* IE 0+ */
+        color: #fff !important;
+    }
+
+    &:-moz-placeholder {
+        /* Firefox 18- */
+        color: #fff !important;
+    }
+
+    &:focus,
+    &:active {
+        background: transparent;
+        border-color: rgba(255, 255, 255, 0.5) !important;
+    }
+}
+
+textarea.form-control {
+    height: inherit !important;
+    margin-top: 5px;
+}
+
+.contactForm {
+    .form-control {
+        border: none;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        padding: 0;
+    }
+}
+
+.btn {
+    padding: 12px 16px;
+    cursor: pointer;
+    border-width: 1px;
+    border-radius: 5px;
+    font-size: 14px;
+    font-weight: 400;
+    -webkit-box-shadow: 0px 10px 20px -6px rgba(0, 0, 0, 0.12);
+    -moz-box-shadow: 0px 10px 20px -6px rgba(0, 0, 0, 0.12);
+    box-shadow: 0px 10px 20px -6px rgba(0, 0, 0, 0.12);
+    position: relative;
+    margin-top: 20px;
+}
+
+.btn-primary {
+    background: #069370 !important;
+    border-color: #069370 !important;
+    color: #fff;
+}
+
+.info-wrap {
+    background-color: #ffffff5e;
+    border-top-right-radius: 20px;
+    h3 {
+        color: #fff;
+        position: relative;
+
+        &:after {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: #069370;
+            content: "";
+        }
+    }
+
+    .dbox {
+        width: 100%;
+        margin-bottom: 25px;
+
+        &:last-child() {
+            margin-bottom: 0;
+        }
+
+        p {
+            margin-bottom: 0;
+
+            span {
+                font-weight: 400;
+                color: #111;
+            }
+
+            a {
+                color: #111;
+            }
+        }
+
+        .icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+
+            span {
+                font-size: 20px;
+                color: #fff;
+            }
+        }
+
+        .text {
+            width: calc(100% - 50px);
+        }
+    }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5 {
+    line-height: 1.5;
+    font-weight: 400;
+    font-family: "Poppins", Arial, sans-serif;
+    color: #fff;
+}
+
+a {
+    transition: 0.3s all ease;
+    color: #111;
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+        text-decoration: none !important;
+        outline: none !important;
+        box-shadow: none;
+    }
+}
+
+#contactForm {
+    .form-control {
+        font-size: 16px;
+    }
+}
+
+.containerr{
+    backdrop-filter: blur(25px);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-gap: 10px;
+    border-radius: 20px;
+}
+
+    </style>
+
+    <div class="contact-section">
+      <div class='containerr'>
+        <div>
+                  <div class='contact-wrap w-100 p-lg-5 p-4'>
+                    <h3 class='mb-4'>Send us a message</h3>
+                    <form id='contactForm' class='contactForm' onSubmit={handleSubmit}>
+                      <div class='row'>
+                        <div class='col-md-12'>
+                          <div class='form-group'>
+                            <input type="text" class='form-control' name='fullname' placeholder='Full Name' onChange={handleInputChange} value={fullname}></input>
+                          </div>
+                        </div>
+                        <div class='col-md-12'>
+                          <div class='form-group'>
+                            <input type="text" class='form-control' name='email' placeholder='Email' onChange={handleInputChange} value={email}></input>
+                          </div>
+                        </div>
+                        <div class='col-md-12'>
+                          <div class='form-group'>
+                            <input type="text" class='form-control' name='mobilenumber' placeholder='Mobile Number' onChange={handleInputChange} value={mobilenumber}></input>
+                          </div>
+                        </div>
+                        <div class='col-md-12'>
+                          <div class='form-group'>
+                            <textarea type="text" class='form-control' name='message' placeholder='Message' onChange={handleInputChange} cols="30" rows="8" value={message}></textarea>
+                          </div>
+                        </div>
+                        <div class='col-md-12'>
+                          <div class='form-group'>
+                            <input type="submit" value="Send Message" class='btn btn-primary' />
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+        </div>
+        <div>
+                  <div class='info-wrap w-100 p-lg-5 p-4 img'>
+                    <h3>Contact us</h3>
+                    <p class='mb-4 text-white'>We're open for any suggestion or just to have a chat</p>
+                    <div class='dbox w-100 d-flex align-items-start'>
+                      <div class='icon d-flex align-items-center justify-content-center'>
+                        <!-- location icon -->
+                      </div>
+                      <div class='text pl-3'> 
+                        <p class='mb-4 text-white'>
+                          <span>Address:</span>198 West 21st Street, Suite 721 New York NY 10016 
+                        </p>
+                      </div>
+                    </div>
+                    <div class='dbox w-100 d-flex align-items-center'>
+                      <div class='icon d-flex align-items-center justify-content-center'>
+                        <!-- phone icon -->
+                      </div>
+                      <div class='text pl-3'>
+                        <p class='mb-4 text-white'>
+                          <span>Phone:</span>
+                          <a href="tel://1234567890">+ 1235 2355 98</a>
+                        </p>
+                      </div>
+                    </div>
+                    <div class='dbox w-100 d-flex align-items-center'>
+                      <div class='icon d-flex align-items-center justify-content-center'>
+                        <!-- icon mail-->
+                      </div>
+                      <div class='text pl-3'>
+                        <p class='mb-4 text-white'>
+                          <span>Email:</span>
+                          <a href="mailto:info@yourwebsite.com">info@yourwebsite.com</a>
+                        </p>
+                      </div>
+                    </div>
+                    <div class='dbox w-100 d-flex align-items-center'>
+                      <div class='icon d-flex align-items-center justify-content-center'>
+                        <!-- web icon -->
+                      </div>
+                      <div class='text pl-3'>
+                        <p class='mb-4 text-white'>
+                          <span>Website:</span>
+                          <a href="link" target='main'>yoursite.com</a>
+                        </p>
+                      </div>
+                    </div>
+                    <!-- <div class='dbox w-100 d-flex align-items-start '>
+                      <div class='icon d-flex align-items-center justify-content-center'>
+                          <a href="https://www.linkedin.com/" target='main'><span class='fa fa-linkedin-square'></span></a>
+                      </div>
+                      <div class='icon d-flex align-items-center justify-content-center'>                        
+                          <a href="https://twitter.com/" target='main'><span class='fa fa-twitter'></span></a>
+                      </div>
+                      <div class='icon d-flex align-items-center justify-content-center'>                        
+                          <a href="https://www.instagram.com/" target='main'><span class='fa fa-instagram'></span></a>
+                      </div>
+                      <div class='icon d-flex align-items-center justify-content-center'>
+                          <a href="https://www.facebook.com/" target='main'><span class='fa fa-facebook'></span></a>
+                      </div> -->
+                    </div>
+        </div>                 
+      </div>
+    </div>
+    
