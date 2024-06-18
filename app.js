@@ -95,6 +95,10 @@ app.get("/contact", (req, res) => {
     res.render("contact.ejs");
 });
 
+app.get("/backend", (req, res) => {
+    res.render("backend.ejs");
+});
+
 app.get('/signup', (req, res) => {
     res.render("users/signup.ejs");
 });
