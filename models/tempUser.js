@@ -1,13 +1,17 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const passportLocalMongoose = require('passport-local-mongoose');
 
-const userSchema = new Schema({
+const tempUserSchema = new Schema({
     email: {
         type: String,
         required: [true, 'Email is required'],
         unique: true,
         match: [/.+@.+\..+/, 'Please enter a valid email address']
+    },
+    username: {
+        type: String,
+        required: [true, 'Username is required'],
+        unique: true
     },
     firstName: {
         type: String,
@@ -35,28 +39,10 @@ const userSchema = new Schema({
         required: [true, 'Mobile number is required'],
         match: [/^\+?\d{10,15}$/, 'Please enter a valid mobile number']
     },
-    resetPasswordToken: String,
-    resetPasswordExpires: Date,
     emailVerificationCode: String,
     emailVerificationExpires: Date,
     mobileVerificationCode: String,
-    mobileVerificationExpires: Date,
-    isEmailVerified: {
-        type: Boolean,
-        default: false
-    },
-    isMobileVerified: {
-        type: Boolean,
-        default: false
-    },
+    mobileVerificationExpires: Date
 });
 
-userSchema.plugin(passportLocalMongoose);
-// userSchema.plugin(passportLocalMongoose, {
-//     usernameField: 'email', // Use email as the username field
-//     errorMessages: {
-//         UserExistsError: 'A user with the given email is already registered'
-//     }
-// });
-
-module.exports = mongoose.model('User', userSchema);
+module.exports = mongoose.model('TempUser', tempUserSchema);

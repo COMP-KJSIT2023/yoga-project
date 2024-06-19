@@ -1,0 +1,43 @@
+<% layout('/layouts/boilerplate') %>
+
+<style>
+    .verify-button {
+        margin: 2rem 6rem 0 6rem;
+    }
+</style>
+
+<body>
+    <form method="post" action="/verify" novalidate class="needs-validation">
+        <div class="wrapper">
+            <div class="login_box">
+                <div class="login-header">
+                    <span>Verify</span>
+                </div>
+
+                <div class="input_box">
+                    <input type="email" id="email" name="email" class="input-field" required>
+                    <label for="email" class="label">Email</label>
+                </div>
+
+                <div class="input_box">
+                    <input type="text" id="emailCode" name="emailCode" class="input-field" required>
+                    <label for="emailCode" class="label">Email Verification Code</label>
+                </div>
+
+                <div class="input_box">
+                    <input type="tel" id="mobile" name="mobile" class="input-field" required>
+                    <label for="mobile" class="label">Mobile</label>
+                </div>
+
+                <div class="input_box">
+                    <input type="text" id="mobileCode" name="mobileCode" class="input-field" required>
+                    <label for="mobileCode" class="label">Mobile Verification Code</label>
+                </div>
+
+                <div class="input_box verify-button">
+                    <input type="submit" class="input-submit" value="Verify">
+                </div>
+            </div>
+        </div>
+    </form>
+</body>

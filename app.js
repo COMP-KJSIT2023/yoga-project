@@ -1,3 +1,5 @@
+require('dotenv').config()
+
 const express = require("express");
 const app = express();
 const path = require("path");
@@ -13,9 +15,12 @@ const flash = require("connect-flash");
 const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require("./models/user.js");
+const TempUser = require('./models/tempUser.js');
 const { saveRedirectUrl } = require('./middleware.js');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
+const twilio = require('twilio');
+const { v4: uuidv4 } = require('uuid');
 
 const MONGO_URL = 'mongodb://127.0.0.1:27017/yoga-website';
 
@@ -103,22 +108,127 @@ app.get('/signup', (req, res) => {
     res.render("users/signup.ejs");
 });
 
-app.post('/signup', async (req, res) => {
+// Email setup
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    }
+});
+
+// Twilio setup
+const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+
+// Function to send email
+async function sendVerificationEmail(to, code) {
+    const mailOptions = {
+        from: process.env.EMAIL_USER,
+        to,
+        subject: 'Email Verification',
+        text: `Your verification code is ${code}`
+    };
+    await transporter.sendMail(mailOptions);
+}
+
+// Function to send SMS
+async function sendVerificationSMS(to, code) {
+    await twilioClient.messages.create({
+        body: `Your verification code is ${code}`,
+        from: process.env.TWILIO_PHONE_NUMBER,
+        to
+    });
+}
+
+app.post('/signup', async (req, res, next) => {
     try {
-        let { username, email, password } = req.body;
-        let newUser = new User({email, username});
-        let registeredUser = await User.register(newUser, password);
-        console.log(registeredUser);
-        req.login(registeredUser, (err) => {
-            if(err) {
-                next(err);
-            }
-            req.flash("success", "Welcome to Yoga.Fitnesse!");
-            res.redirect("/");
+        const { username, email, password, first_name, middle_name, last_name, dob, mobile } = req.body;
+
+        const emailVerificationCode = uuidv4();
+        const mobileVerificationCode = uuidv4();
+
+        const emailVerificationExpires = Date.now() + 600000;
+        const mobileVerificationExpires = Date.now() + 600000;
+
+        let newTempUser = new TempUser({
+            email,
+            username,
+            password,
+            firstName: first_name,
+            middleName: middle_name,
+            lastName: last_name,
+            dob: new Date(dob),
+            mobile,
+            emailVerificationCode,
+            emailVerificationExpires,
+            mobileVerificationCode,
+            mobileVerificationExpires
         });
+
+        await newTempUser.save();
+
+        await sendVerificationEmail(email, emailVerificationCode);
+        await sendVerificationSMS(mobile, mobileVerificationCode);
+
+        req.flash('success', 'Verification codes sent to your email and mobile. Please verify to complete registration.');
+        res.redirect('/verify');
     } catch (e) {
-        req.flash("error", e.message);
-        res.redirect("/signup");
+        req.flash('error', e.message);
+        res.redirect('/signup');
+    }
+});
+
+app.get('/verify', (req, res) => {
+    res.render('users/verify.ejs');
+});
+
+app.post('/verify', async (req, res) => {
+    const { email, emailCode, mobile, mobileCode } = req.body;
+
+    try {
+        const tempUser = await TempUser.findOne({ email, mobile });
+
+        if (!tempUser) {
+            req.flash('error', 'User not found.');
+            return res.redirect('/verify');
+        }
+
+        // Check email verification code and expiry
+        if (tempUser.emailVerificationCode === emailCode && tempUser.emailVerificationExpires > Date.now()) {
+            tempUser.isEmailVerified = true;
+        } else {
+            req.flash('error', 'Invalid or expired email verification code.');
+            return res.redirect('/verify');
+        }
+
+        // Check mobile verification code and expiry
+        if (tempUser.mobileVerificationCode === mobileCode && tempUser.mobileVerificationExpires > Date.now()) {
+            tempUser.isMobileVerified = true;
+        } else {
+            req.flash('error', 'Invalid or expired mobile verification code.');
+            return res.redirect('/verify');
+        }
+        
+        const newUser = new User({
+            email: tempUser.email,
+            username: tempUser.username,
+            firstName: tempUser.firstName,
+            middleName: tempUser.middleName,
+            lastName: tempUser.lastName,
+            dob: tempUser.dob,
+            mobile: tempUser.mobile
+        });
+
+        let registeredUser = await User.register(newUser, tempUser.password);
+        console.log(registeredUser);
+
+        await TempUser.deleteOne({ email, mobile });
+
+        req.flash('success', 'Email and Mobile verified successfully. You can now log in.');
+        res.redirect('/login');
+    } catch (e) {
+        req.flash('error', e.message);
+        res.redirect('/verify');
     }
 });
 
@@ -127,6 +237,11 @@ app.get('/login', (req, res) => {
 });
 
 app.post('/login', saveRedirectUrl, passport.authenticate("local", { failureRedirect: '/login', failureFlash: true }),  async (req, res) => {
+    if (!req.user.isEmailVerified || !req.user.isMobileVerified) {
+        req.flash('error', 'Please verify your email and mobile to log in.');
+        return res.redirect('/verify');
+    }
+
     req.flash("success", "Welcome to Yoga.Fitnesse!");
     let redirectUrl = res.locals.redirectUrl || "/";
     res.redirect(redirectUrl);
@@ -162,14 +277,14 @@ app.post('/forgot', async (req, res) => {
         const smtpTransport = nodemailer.createTransport({
             service: 'Gmail',
             auth: {
-                user: 'masunavivek7208@gmail.com',
-                pass: 'skay zvxq pqcg ykwg',
-            },
+                user: process.env.EMAIL_USER,
+                pass: process.env.EMAIL_PASS
+            }
         });
 
         const mailOptions = {
             to: user.email,
-            from: 'masunavivek7208@gmail.com',
+            from: process.env.EMAIL_USER,
             subject: 'Password Reset',
             text: `You are receiving this because you (or someone else) have requested the reset of the password for your account.
             Please click on the following link, or paste this into your browser to complete the process: http://${req.headers.host}/reset/${token}

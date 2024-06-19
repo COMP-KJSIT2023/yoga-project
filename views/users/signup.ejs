@@ -1,39 +1,113 @@
 <% layout('/layouts/boilerplate') %>
 
-<body>
-    <form method="post" action="/signup" novalidate class="needs-validation">
-        <div class="wrapper">
-            <div class="login_box">
-                <div class="login-header">
-                    <span>Register</span>
-                </div>
+    <style>
+        .wrapper {
+            width: 50rem;
+        }
 
-                <div class="input_box">
-                    <input type="text" id="user" name="username" class="input-field" required>
-                    <label for="user" class="label">Username</label>
-                    <i class="bx bx-user icon"></i>
-                </div>
+        .login_box {
+            width: 100%;
+        }
 
-                <div class="input_box">
-                    <input type="email" id="email" name="email" class="input-field" required>
-                    <label for="email" class="label">Email</label>
-                    <i class='bx bx-envelope icon'></i>
-                </div>
+        .name {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-                <div class="input_box">
-                    <input style="margin-bottom: 10px;" type="password" name="password" id="pass" class="input-field" required>
-                    <label for="pass" class="label">Password</label>
-                    <i class="bx bx-lock-alt icon"></i>
-                </div>
+        .name .input_box {
+            width: 31%;
+        }
 
-                <div class="input_box">
-                    <input type="submit" class="input-submit" value="Register">
-                </div>
+        .dob-mobile {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-                <div class="register">
-                    <span>Already Registered? <a href="/login">Login</a></span>
+        .register-button {
+            margin-left: 8rem;
+            margin-right: 8rem;
+        }
+
+        #dob {
+            padding: 20px;
+            z-index: 10;
+            
+        }
+
+        
+    </style>
+
+    <body>
+        <form method="post" action="/signup" novalidate class="needs-validation">
+            <div class="wrapper">
+                <div class="login_box">
+                    <div class="login-header">
+                        <span>Register</span>
+                    </div>
+
+                    <div class="name">
+                        <div class="input_box">
+                            <input type="text" id="first-name" name="first_name" class="input-field" required>
+                            <label for="first-name" class="label">First Name</label>
+                            <i class="bx bx-user icon"></i>
+                        </div>
+
+                        <div class="input_box">
+                            <input type="text" id="middle-name" name="middle_name" class="input-field" required>
+                            <label for="middle-name" class="label">Middle Name</label>
+                            <i class="bx bx-user icon"></i>
+                        </div>
+
+                        <div class="input_box">
+                            <input type="text" id="last-name" name="last_name" class="input-field" required>
+                            <label for="last-name" class="label">Last Name</label>
+                            <i class="bx bx-user icon"></i>
+                        </div>
+                    </div>
+
+                    <div class="dob-mobile">
+                        <div class="input_box" style="width: 40%;">
+                            <input type="date" id="dob" name="dob" class="input-field">
+                            <label for="dob" class="label">Date of Birth</label>
+                            <i class="bx bx-calendar icon"></i>
+                        </div>
+
+                        <div class="input_box" style="width: 57%;">
+                            <input type="tel" id="mobile" name="mobile" class="input-field" required>
+                            <label for="mobile" class="label">Mobile</label>
+                            <i class="bx bx-phone icon"></i>
+                        </div>
+                    </div>
+
+                    <div class="input_box">
+                        <input type="email" id="email" name="email" class="input-field" required>
+                        <label for="email" class="label">Email</label>
+                        <i class='bx bx-envelope icon'></i>
+                    </div>
+
+                    <div class="input_box">
+                        <input type="text" id="user" name="username" class="input-field" required>
+                        <label for="user" class="label">Username</label>
+                        <i class="bx bx-user icon"></i>
+                    </div>
+
+                    <div class="input_box">
+                        <input style="margin-bottom: 10px;" type="password" name="password" id="pass"
+                            class="input-field" required>
+                        <label for="pass" class="label">Password</label>
+                        <i class="bx bx-lock-alt icon"></i>
+                    </div>
+
+                    <div class="input_box register-button">
+                        <input type="submit" class="input-submit" value="Verify Email & Mobile">
+                    </div>
+
+                    <div class="register">
+                        <span>Already Registered? <a href="/login">Login</a></span>
+                    </div>
                 </div>
             </div>
-        </div>
-    </form>
-</body>
+        </form>
+    </body>
