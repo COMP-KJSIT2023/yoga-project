@@ -20,3 +20,15 @@ body {
     height: 5rem;
     background-color: white;
 }
+
+::-webkit-scrollbar {
+	background: transparent;
+	width: 5px;
+	height: 5px;
+}
+::-webkit-scrollbar-thumb {
+	background-color: #3c3f58;
+}
+::-webkit-scrollbar-thumb:hover {
+	background-color: rgba(0, 0, 0, 0.3);
+}

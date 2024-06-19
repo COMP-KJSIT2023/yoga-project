@@ -15,143 +15,29 @@
 	--dk-gray-900: #111827;
 	--dk-dark-bg: #313348;
 	--dk-darker-bg: #2a2b3d;
-	--navbar-bg-color: #6f6486;
-	--sidebar-bg-color: #252636;
-	--sidebar-width: 250px;
-}
-
-* {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
 }
 
 body {
 	font-family: 'Inter', sans-serif;
-	background-color: var(--dk-darker-bg);
 	font-size: .925rem;
 }
 
+.container {
+    display: grid;
+	grid-gap: 10px;
+	grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+	grid-auto-flow: dense;
+	height: 100vh;
+	width: 80vw;
+}
 #wrapper {
-	margin-left: var(--sidebar-width);
+	backdrop-filter: blur(25px);
+
 	transition: all .3s ease-in-out;
 }
-
 #wrapper.fullwidth {
 	margin-left: 0;
 }
-
-
-
-/** --------------------------------
- -- Sidebar
--------------------------------- */
-.sidebar {
-	background-color: var(--sidebar-bg-color);
-	width: var(--sidebar-width);
-	transition: all .3s ease-in-out;
-	transform: translateX(0);
-	z-index: 9999999
-}
-
-.sidebar .close-aside {
-	position: absolute;
-	top: 7px;
-	right: 7px;
-	cursor: pointer;
-	color: #EEE;
-}
-
-.sidebar .sidebar-header {
-	border-bottom: 1px solid #2a2b3c
-}
-
-.sidebar .sidebar-header h5 a {
-	color: var(--dk-gray-300)
-}
-
-.sidebar .sidebar-header p {
-	color: var(--dk-gray-400);
-	font-size: .825rem;
-}
-
-.sidebar .search .form-control ~ i {
-	color: #2b2f3a;
-	right: 40px;
-	top: 22px;
-}
-
-.sidebar > ul > li {
-	padding: .7rem 1.75rem;
-}
-
-.sidebar ul > li > a {
-	color: var(--dk-gray-400);
-	text-decoration: none;
-}
-
-/* Start numbers */
-.sidebar ul > li > a > .num {
-	line-height: 0;
-	border-radius: 3px;
-	font-size: 14px;
-	padding: 0px 5px
-}
-
-.sidebar ul > li > i {
-	font-size: 18px;
-	margin-right: .7rem;
-	color: var(--dk-gray-500);
-}
-
-.sidebar ul > li.has-dropdown > a:after {
-	content: '\eb3a';
-	font-family: unicons-line;
-	font-size: 1rem;
-	line-height: 1.8;
-	float: right;
-	color: var(--dk-gray-500);
-	transition: all .3s ease-in-out;
-}
-
-.sidebar ul .opened > a:after {
-	transform: rotate(-90deg);
-}
-
-/* Start dropdown menu */
-.sidebar ul .sidebar-dropdown {
-	padding-top: 10px;
-	padding-left: 30px;
-	display: none;
-}
-.sidebar ul .sidebar-dropdown.active {
-	display: block;
-}
-
-.sidebar ul .sidebar-dropdown > li > a {
-  font-size: .85rem;
-	padding: .5rem 0;
-	display: block;
-}
-/* End dropdown menu */
-
-.show-sidebar {
-	transform: translateX(-270px);
-}
-
-@media (max-width: 767px) {
-	.sidebar ul > li {
-		padding-top: 12px;
-		padding-bottom: 12px;
-	}
-
-	.sidebar .search {
-		padding: 10px 0 10px 30px
-	}
-}
-
-
-
 
 /** --------------------------------
  -- welcome
@@ -159,41 +45,12 @@ body {
 .welcome {
 	color: var(--dk-gray-300);
 }
-
 .welcome .content {
 	background-color: var(--dk-dark-bg);
 }
-
 .welcome p {
 	color: var(--dk-gray-400);
 }
-
-
-
-
-/** --------------------------------
- -- Statistics
--------------------------------- */
-.statistics {
-	color: var(--dk-gray-200);
-}
-
-.statistics .box {
-	background-color: var(--dk-dark-bg);
-}
-
-.statistics .box i {
-	width: 60px;
-	height: 60px;
-	line-height: 60px;
-}
-
-.statistics .box p {
-	color: var(--dk-gray-400);
-}
-
-
-
 
 /** --------------------------------
  -- Charts
@@ -205,27 +62,6 @@ body {
 .charts .chart-container h3 {
 	color: var(--dk-gray-400)
 }
-
-
-
-
-/** --------------------------------
- -- users
--------------------------------- */
-.admins .box .admin {
-	background-color: var(--dk-dark-bg);
-}
-
-.admins .box h3 {
-	color: var(--dk-gray-300);
-}
-
-.admins .box p {
-	color: var(--dk-gray-400)
-}
-
-
-
 
 /** --------------------------------
  -- statis
@@ -264,87 +100,7 @@ body {
 	border-radius: 50%;
 }
 
-
-
-
-
-.main-color {
-	color: #ffc107
-}
-
-/** --------------------------------
- -- Please don't do that in real-world projects!
- -- overwrite Bootstrap variables instead.
--------------------------------- */
-
-.navbar {
-	background-color: var(--navbar-bg-color) !important;
-	border: none !important;
-}
-.navbar .dropdown-menu {
-	right: auto !important;
-	left: 0 !important;
-}
-.navbar .navbar-nav>li>a {
-	color: #EEE !important;
-	line-height: 55px !important;
-	padding: 0 10px !important;
-}
-.navbar .navbar-brand {color:#FFF !important}
-.navbar .navbar-nav>li>a:focus,
-.navbar .navbar-nav>li>a:hover {color: #EEE !important}
-
-.navbar .navbar-nav>.open>a,
-.navbar .navbar-nav>.open>a:focus,
-.navbar .navbar-nav>.open>a:hover {background-color: transparent !important; color: #FFF !important}
-
-.navbar .navbar-brand {line-height: 55px !important; padding: 0 !important}
-.navbar .navbar-brand:focus,
-.navbar .navbar-brand:hover {color: #FFF !important}
-.navbar>.container .navbar-brand, .navbar>.container-fluid .navbar-brand {margin: 0 !important}
-@media (max-width: 767px) {
-	.navbar>.container-fluid .navbar-brand {
-		margin-left: 15px !important;
-	}
-	.navbar .navbar-nav>li>a {
-		padding-left: 0 !important;
-	}
-	.navbar-nav {
-		margin: 0 !important;
-	}
-	.navbar .navbar-collapse,
-	.navbar .navbar-form {
-		border: none !important;
-	}
-}
-
-.navbar .navbar-nav>li>a {
-	float: left !important;
-}
-.navbar .navbar-nav>li>a>span:not(.caret) {
-	background-color: #e74c3c !important;
-	border-radius: 50% !important;
-	height: 25px !important;
-	width: 25px !important;
-	padding: 2px !important;
-	font-size: 11px !important;
-	position: relative !important;
-	top: -10px !important;
-	right: 5px !important
-}
-.dropdown-menu>li>a {
-	padding-top: 5px !important;
-	padding-right: 5px !important;
-}
-.navbar .navbar-nav>li>a>i {
-	font-size: 18px !important;
-}
-
-
-
-
 /* Start media query */
-
 @media (max-width: 767px) {
 	#wrapper {
 		margin: 0 !important
@@ -352,82 +108,162 @@ body {
 	.statistics .box {
 		margin-bottom: 25px !important;
 	}
-	.navbar .navbar-nav .open .dropdown-menu>li>a {
-		color: #CCC !important
-	}
-	.navbar .navbar-nav .open .dropdown-menu>li>a:hover {
-		color: #FFF !important
-	}
-	.navbar .navbar-toggle{
-		border:none !important;
-		color: #EEE !important;
-		font-size: 18px !important;
-	}
-	.navbar .navbar-toggle:focus, .navbar .navbar-toggle:hover {background-color: transparent !important}
 }
 
+/* table css */
+table {
+	background-color: var(--dk-dark-bg);;
+	backdrop-filter: blur(25px);
+	font-size: 12px;
+	margin: 30px auto;
+	text-align: left;
+	width: 45vw;
+	color: var(--dk-gray-400);
+}	
 
-::-webkit-scrollbar {
-	background: transparent;
-	width: 5px;
-	height: 5px;
+th {
+	background-color: var(--dk-dark-bg);
+	border: 1px solid #fff;
+	box-shadow: inset 0 1px 0 #999;
+	color: var(--dk-gray-300);
+    font-weight: bold;
+	padding: 10px 15px;
+	position: relative;
+	text-shadow: 0 1px 0 #000;	
 }
 
-::-webkit-scrollbar-thumb {
-	background-color: #3c3f58;
+td {
+	border: 1px solid #fff;
+	padding: 10px 15px;
+	transition: all 300ms;
 }
 
-::-webkit-scrollbar-thumb:hover {
-	background-color: rgba(0, 0, 0, 0.3);
+tbody:hover td {
+	color: #fff;
 }
 
+tbody:hover tr:hover td {
+	color: #fff;
+}
     </style>
 
     <body>
         <section id="wrapper">
-          
-            <div class="p-4">
-              <div class="welcome">
+              <div class="welcome p-4">
                 <div class="content rounded-3 p-3">
                   <h1 class="fs-3">Welcome to Dashboard</h1>
-                  <p class="mb-0">Hello Jone Doe, welcome to your awesome dashboard!</p>
-                </div>
-              </div>
+                  <p class="mb-0">Hello Monika, welcome to your awesome dashboard!</p>
+				</div>
+			  </div>
           
               <section class="statis mt-4 text-center">
-                <div class="row">
-                  <div class="col-md-6 col-lg-3 mb-4 mb-lg-0">
+                <div class="col p-4">
+                  <div class="mb-4 mb-lg-0">
                     <div class="box bg-primary p-3">
                       <i class="uil-eye"></i>
                       <h3>5,154</h3>
                       <p class="lead">Page views</p>
                     </div>
                   </div>
-                  <div class="col-md-6 col-lg-3 mb-4 mb-lg-0">
+                  <div class="mb-4 mb-lg-0">
                     <div class="box bg-danger p-3">
                       <i class="uil-user"></i>
                       <h3>245</h3>
                       <p class="lead">User registered</p>
                     </div>
                   </div>
-                  <!-- <div class="col-md-6 col-lg-3">
                     <div class="box bg-success p-3">
                       <i class="uil-feedback"></i>
-                      <h3>5,154</h3>
-                      <p class="lead">Transactions</p>
+                      <h3>100</h3>
+                      <p class="lead">Queries</p>
                     </div>
-                  </div> -->
                 </div>
               </section>
           
-              <section class="charts mt-4">
+              <section class="charts">
                 <div class="chart-container p-3">
                   <h3 class="fs-6 mb-3">Chart title number three</h3>
-                  <div style="height: 300px">
                     <canvas id="chart3" width="100%"></canvas>
-                  </div>
                 </div>
               </section>
-            </div>
         </section>
+			<table>
+				<thead>
+				<tr>
+					<th>Username</th>
+					<th>Email</th>
+					<th>Phone number</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr>
+					<td><strong>showSpeed</strong></td>
+					<td>1@gmail.com</td>
+					<td>1234567890</td>
+				</tr>
+				<tr>
+					<td><strong>showEasing</strong></td>
+					<td>1@gmail.com</td>
+					<td>1234567890</td>
+				</tr>
+				<tr>
+					<td><strong>hideSpeed</strong></td>
+					<td>1@gmail.com</td>
+					<td>1234567890</td>
+				</tr>
+				</tbody>
+			</table>
+		<script>
+			var chart = document.getElementById('chart3');
+			var myChart = new Chart(chart, {
+			type: 'line',
+			data: 
+			{
+				labels: ["Jan", "Feb", "Mar", "April", "May", 'June', "July", "Aug"],
+				datasets: [
+				{
+					label: "Views",
+					lineTension: 0.2,
+					borderColor: '#d9534f',
+					borderWidth: 1.5,
+					showLine: true,
+					data: [3, 30, 16, 30, 16, 36, 21, 40, 20, 30],
+					backgroundColor: 'transparent'
+				}, 
+				{
+					label: "Users Registered",
+					lineTension: 0.2,
+					borderColor: '#5cb85c',
+					borderWidth: 1.5,
+					data: [6, 20, 5, 20, 5, 25, 9, 18, 20, 15],
+					backgroundColor: 'transparent'
+				},
+				{
+					label: "Queries",
+					lineTension: 0.2,
+					borderColor: '#f0ad4e',
+					borderWidth: 1.5,
+					data: [12, 20, 15, 20, 5, 35, 10, 15, 35, 25],
+					backgroundColor: 'transparent'
+				}]
+			},
+			options: {
+				scales: {
+				yAxes: [{
+					gridLines: {
+					drawBorder: false
+					},
+					ticks: {
+					stepSize: 12
+					}
+				}],
+				xAxes: [{
+					gridLines: {
+					display: false,
+					},
+				}],
+				}
+			}
+			})
+		</script>
     </body>
