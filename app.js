@@ -21,6 +21,7 @@ const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const twilio = require('twilio');
 const { v4: uuidv4 } = require('uuid');
+const axios = require('axios');
 
 const MONGO_URL = 'mongodb://127.0.0.1:27017/yoga-website';
 
@@ -110,7 +111,7 @@ app.get('/signup', (req, res) => {
 
 // Email setup
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    service: 'Gmail',
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
@@ -123,8 +124,8 @@ const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_A
 // Function to send email
 async function sendVerificationEmail(to, code) {
     const mailOptions = {
-        from: process.env.EMAIL_USER,
         to,
+        from: process.env.EMAIL_USER,
         subject: 'Email Verification',
         text: `Your verification code is ${code}`
     };
@@ -140,15 +141,19 @@ async function sendVerificationSMS(to, code) {
     });
 }
 
+function generateVerificationCode() {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+}
+
 app.post('/signup', async (req, res, next) => {
+    const { username, email, password, first_name, middle_name, last_name, dob, mobile } = req.body;
+    
     try {
-        const { username, email, password, first_name, middle_name, last_name, dob, mobile } = req.body;
+        const emailVerificationCode = generateVerificationCode();
+        const mobileVerificationCode = generateVerificationCode();
 
-        const emailVerificationCode = uuidv4();
-        const mobileVerificationCode = uuidv4();
-
-        const emailVerificationExpires = Date.now() + 600000;
-        const mobileVerificationExpires = Date.now() + 600000;
+        const emailVerificationExpires = Date.now() + 3600000;
+        const mobileVerificationExpires = Date.now() + 3600000;
 
         let newTempUser = new TempUser({
             email,
@@ -168,12 +173,14 @@ app.post('/signup', async (req, res, next) => {
         await newTempUser.save();
 
         await sendVerificationEmail(email, emailVerificationCode);
-        await sendVerificationSMS(mobile, mobileVerificationCode);
+        // await sendVerificationSMS(mobile, mobileVerificationCode);
 
         req.flash('success', 'Verification codes sent to your email and mobile. Please verify to complete registration.');
         res.redirect('/verify');
     } catch (e) {
         req.flash('error', e.message);
+        console.log(e);
+        await TempUser.deleteMany({ email, mobile });
         res.redirect('/signup');
     }
 });
@@ -196,18 +203,19 @@ app.post('/verify', async (req, res) => {
         // Check email verification code and expiry
         if (tempUser.emailVerificationCode === emailCode && tempUser.emailVerificationExpires > Date.now()) {
             tempUser.isEmailVerified = true;
+            tempUser.isMobileVerified = true;
         } else {
             req.flash('error', 'Invalid or expired email verification code.');
             return res.redirect('/verify');
         }
 
         // Check mobile verification code and expiry
-        if (tempUser.mobileVerificationCode === mobileCode && tempUser.mobileVerificationExpires > Date.now()) {
-            tempUser.isMobileVerified = true;
-        } else {
-            req.flash('error', 'Invalid or expired mobile verification code.');
-            return res.redirect('/verify');
-        }
+        // if (tempUser.mobileVerificationCode === mobileCode && tempUser.mobileVerificationExpires > Date.now()) {
+        //     tempUser.isMobileVerified = true;
+        // } else {
+        //     req.flash('error', 'Invalid or expired mobile verification code.');
+        //     return res.redirect('/verify');
+        // }
         
         const newUser = new User({
             email: tempUser.email,
@@ -216,13 +224,15 @@ app.post('/verify', async (req, res) => {
             middleName: tempUser.middleName,
             lastName: tempUser.lastName,
             dob: tempUser.dob,
-            mobile: tempUser.mobile
+            mobile: tempUser.mobile,
+            isEmailVerified: tempUser.isEmailVerified,
+            isMobileVerified: tempUser.isMobileVerified,
         });
-
+        console.log(tempUser);
         let registeredUser = await User.register(newUser, tempUser.password);
         console.log(registeredUser);
 
-        await TempUser.deleteOne({ email, mobile });
+        await TempUser.deleteMany({ email, mobile });
 
         req.flash('success', 'Email and Mobile verified successfully. You can now log in.');
         res.redirect('/login');
@@ -236,15 +246,30 @@ app.get('/login', (req, res) => {
     res.render("users/login.ejs");
 });
 
-app.post('/login', saveRedirectUrl, passport.authenticate("local", { failureRedirect: '/login', failureFlash: true }),  async (req, res) => {
-    if (!req.user.isEmailVerified || !req.user.isMobileVerified) {
-        req.flash('error', 'Please verify your email and mobile to log in.');
-        return res.redirect('/verify');
-    }
+app.post('/login', saveRedirectUrl, async (req, res, next) => {
+    passport.authenticate("local", async (err, user, info) => {
+        if (err) { 
+            return next(err); 
+        }
+        if (!user) {
+            req.flash('error', 'Invalid username or password.');
+            return res.redirect('/login');
+        }
 
-    req.flash("success", "Welcome to Yoga.Fitnesse!");
-    let redirectUrl = res.locals.redirectUrl || "/";
-    res.redirect(redirectUrl);
+        if (!user.isEmailVerified || !user.isMobileVerified) {
+            req.flash('error', 'Please verify your email and mobile to log in.');
+            return res.redirect('/verify');
+        }
+
+        req.logIn(user, (err) => {
+            if (err) {
+                return next(err);
+            }
+            req.flash("success", "Welcome to Yoga.Fitnesse!");
+            let redirectUrl = res.locals.redirectUrl || "/";
+            res.redirect(redirectUrl);
+        });
+    })(req, res, next);
 });
 
 app.get("/logout", (req, res, next) => {
@@ -271,7 +296,7 @@ app.post('/forgot', async (req, res) => {
         }
 
         user.resetPasswordToken = token;
-        user.resetPasswordExpires = Date.now() + 600000; // 10 minutes
+        user.resetPasswordExpires = Date.now() + 3600000;
         await user.save();
 
         const smtpTransport = nodemailer.createTransport({

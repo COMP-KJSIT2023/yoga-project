@@ -1,3 +1,4 @@
+const { required } = require('joi');
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
@@ -5,13 +6,15 @@ const tempUserSchema = new Schema({
     email: {
         type: String,
         required: [true, 'Email is required'],
-        unique: true,
         match: [/.+@.+\..+/, 'Please enter a valid email address']
+    },
+    password: {
+        type: String,
+        required: true,
     },
     username: {
         type: String,
         required: [true, 'Username is required'],
-        unique: true
     },
     firstName: {
         type: String,
@@ -42,7 +45,15 @@ const tempUserSchema = new Schema({
     emailVerificationCode: String,
     emailVerificationExpires: Date,
     mobileVerificationCode: String,
-    mobileVerificationExpires: Date
+    mobileVerificationExpires: Date,
+    isEmailVerified: {
+        type: Boolean,
+        default: false
+    },
+    isMobileVerified: {
+        type: Boolean,
+        default: false
+    },
 });
 
 module.exports = mongoose.model('TempUser', tempUserSchema);
