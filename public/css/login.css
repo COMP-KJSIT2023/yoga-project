@@ -11,14 +11,6 @@
     --black-color: #000000;
 }
 
-body {
-    background-image: "/assets/yoga.jpg";
-    background-position: center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-}
-
 a {
     text-decoration: none;
     color: var(--second-color);

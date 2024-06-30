@@ -101,9 +101,9 @@ app.get("/contact", (req, res) => {
     res.render("contact.ejs");
 });
 
-app.get("/backend", (req, res) => {
-    res.render("backend.ejs");
-});
+// app.get("/backend", (req, res) => {
+//     res.render("backend.ejs");
+// });
 
 app.get('/signup', (req, res) => {
     res.render("users/signup.ejs");
@@ -119,7 +119,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // Twilio setup
-const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
+// const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
 
 // Function to send email
 async function sendVerificationEmail(to, code) {
@@ -133,13 +133,13 @@ async function sendVerificationEmail(to, code) {
 }
 
 // Function to send SMS
-async function sendVerificationSMS(to, code) {
-    await twilioClient.messages.create({
-        body: `Your verification code is ${code}`,
-        from: process.env.TWILIO_PHONE_NUMBER,
-        to
-    });
-}
+// async function sendVerificationSMS(to, code) {
+//     await twilioClient.messages.create({
+//         body: `Your verification code is ${code}`,
+//         from: process.env.TWILIO_PHONE_NUMBER,
+//         to
+//     });
+// }
 
 function generateVerificationCode() {
     return Math.floor(100000 + Math.random() * 900000).toString();
