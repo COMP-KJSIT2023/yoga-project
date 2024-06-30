@@ -1,7 +1,99 @@
 <% layout('/layouts/boilerplate') %>
-
+<link rel="stylesheet" href="/index.css">
 <body>
-    <div class="container">
-        <h1 style="color: white;">Index Page</h1>
-    </div>
+    <section id="wrapper">
+            <!-- <div class="welcome p-4">
+            <div class="content rounded-3 p-3">
+                <h1 class="fs-3">Welcome!</h1>
+                <p class="mb-0">Hello, welcome to Yoga.fitnesse family!</p>
+            </div>
+            </div> -->
+
+            <section id="home">
+                <div class="container">
+                    <div class="row align-items-center mt-3">
+                        <div class="col-sm-12 col-lg-6">
+                            <div class="contentt">
+                                <h1>Yoga.Fitnesse</h1>
+                                <ul>
+                                    <li>Established in Year 2018</li>
+                                    <!-- <li>More than 5000+ people have been benefited till date</li> -->
+                                    <li>Online & offline batches</li>
+                                    <li>Customized personal sessions</li>
+                                    <li>Therapy sessions for acute and chronic health ailments</li>
+                                </ul>
+                                </div>
+                        </div>
+
+                        <!-- The home page image -->
+                        <div class="col-sm-12 col-lg-6">
+                            <div class="home-image">
+                                <img src="/assets/main_1.PNG" class="img-fluid">
+                            </div>
+                        </div>
+                    </div>
+            </section>
+            
+            <section class="statis mt-4 text-center">
+            <div class="col p-4">
+                <div class="mb-4 mb-lg-0">
+                <div class="box bg-info p-3">
+                    <i class="uil-eye"></i>
+                    <h3>5,154</h3>
+                    <p class="lead">Students enrolled till date</p>
+                </div>
+                </div>
+                <div class="mb-4 mb-lg-0">
+                <div class="box bg-success p-3">
+                    <i class="uil-user"></i>
+                    <h3>245</h3>
+                    <p class="lead">Users registered</p>
+                </div>
+                </div>
+                <!-- <div class="box bg-success p-3">
+                    <i class="uil-feedback"></i>
+                    <h3>100</h3>
+                    <p class="lead">Queries</p>
+                </div> -->
+            </div>
+            </section>
+            <section class="gallery-section">
+                <div class="gallery-container">
+                    <div class="gallery">
+                        <!-- Repeat these elements for your gallery items -->
+                        <div class="gallery-item"><img src="/assets/gallery_index/1.JPG" alt="Image 1"></div>
+                        <div class="gallery-item"><img src="/assets/gallery_index/2.JPG" alt="Image 2"></div>
+                        <div class="gallery-item"><img src="/assets/gallery_index/3.JPG" alt="Image 3"></div>
+                        <div class="gallery-item"><img src="/assets/gallery_index/4.JPG" alt="Image 4"></div>
+                        <div class="gallery-item"><img src="/assets/gallery_index/5.JPG" alt="Image 5"></div>
+                        <div class="gallery-item"><img src="/assets/gallery_index/6.PNG" alt="Image 6"></div>
+                        <div class="gallery-item"><img src="/assets/gallery_index/7.JPG" alt="Image 7"></div>
+                        <div class="gallery-item"><img src="/assets/gallery_index/8.PNG" alt="Image 8"></div>
+                        <!-- Repeat more items as needed -->
+                    </div>
+                </div>
+            </section>
+    </section>
+    <script>
+        const gallery = document.querySelector('.gallery');
+        const cloneGallery = gallery.cloneNode(true);
+
+        // Append cloned gallery to the original
+        gallery.appendChild(cloneGallery);
+
+        // Optional: Scroll the gallery automatically
+        let scrollAmount = 0;
+        const scrollDelay = 20; // Adjust the delay for smoothness
+
+        function scrollGallery() {
+            scrollAmount += 1;
+            gallery.style.transform = `translateX(-${scrollAmount}px)`;
+
+            if (scrollAmount % gallery.offsetWidth === 0) {
+                scrollAmount = 0;
+            }
+        }
+
+        setInterval(scrollGallery, scrollDelay);
+    </script>
 </body>
