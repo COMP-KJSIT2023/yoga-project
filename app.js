@@ -16,12 +16,17 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 const User = require("./models/user.js");
 const TempUser = require('./models/tempUser.js');
+const Gallery = require("./models/gallery.js");
 const { saveRedirectUrl } = require('./middleware.js');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
 const twilio = require('twilio');
 const { v4: uuidv4 } = require('uuid');
 const axios = require('axios');
+const auth = require('./firebase.js');
+const multer  = require('multer');
+const {storage} = require('./cloudConfig.js');
+const upload = multer({ storage });
 
 const MONGO_URL = 'mongodb://127.0.0.1:27017/yoga-website';
 
@@ -109,6 +114,32 @@ app.get('/signup', (req, res) => {
     res.render("users/signup.ejs");
 });
 
+app.get('/gallery', async (req, res) => {
+    const allImages = await Gallery.find({});
+    res.render("gallery/gallery.ejs", { allImages });
+});
+
+app.get('/gallery/new', (req, res) => {
+    res.render("gallery/new.ejs");
+});
+
+app.post('/gallery', upload.single('image'), async (req, res) => {
+    try {
+        let url = req.file.path;
+        let filename = req.file.filename;
+        let { description } = req.body;
+        const newImage = new Gallery({ description, image: { url, filename } });
+
+        await newImage.save();
+        req.flash("success", "New Image Uploaded!");
+        res.redirect("/gallery");
+    } catch (err) {
+        console.error(err);
+        req.flash("error", "An error occurred while uploading the image.");
+        res.redirect("/gallery");
+    }
+});
+
 // Email setup
 const transporter = nodemailer.createTransport({
     service: 'Gmail',
@@ -118,9 +149,6 @@ const transporter = nodemailer.createTransport({
     }
 });
 
-// Twilio setup
-const twilioClient = twilio(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_AUTH_TOKEN);
-
 // Function to send email
 async function sendVerificationEmail(to, code) {
     const mailOptions = {
@@ -129,17 +157,27 @@ async function sendVerificationEmail(to, code) {
         subject: 'Email Verification',
         text: `Your verification code is ${code}`
     };
-    await transporter.sendMail(mailOptions);
+
+    for (let i = 0; i < 3; i++) { // retry 3 times
+        try {
+            await transporter.sendMail(mailOptions);
+            return;
+        } catch (error) {
+            console.error(`Attempt ${i + 1} to send email failed:`, error);
+            if (i === 2) throw error;
+        }
+    }
 }
 
-// Function to send SMS
-async function sendVerificationSMS(to, code) {
-    await twilioClient.messages.create({
-        body: `Your verification code is ${code}`,
-        from: process.env.TWILIO_PHONE_NUMBER,
-        to
-    });
-}
+const sendVerificationMobile = async (mobile) => {
+    try {
+        // Make sure the mobile number is in E.164 format (e.g., +1234567890)
+        const verificationId = await auth.verifyPhoneNumber(mobile);
+        return { status: 200, data: { verificationId } };
+    } catch (error) {
+        return { status: 400, error: error.message };
+    }
+};
 
 function generateVerificationCode() {
     return Math.floor(100000 + Math.random() * 900000).toString();
@@ -147,7 +185,7 @@ function generateVerificationCode() {
 
 app.post('/signup', async (req, res, next) => {
     const { username, email, password, first_name, middle_name, last_name, dob, mobile } = req.body;
-    
+
     try {
         const emailVerificationCode = generateVerificationCode();
         const mobileVerificationCode = generateVerificationCode();
@@ -173,10 +211,15 @@ app.post('/signup', async (req, res, next) => {
         await newTempUser.save();
 
         await sendVerificationEmail(email, emailVerificationCode);
-        // await sendVerificationSMS(mobile, mobileVerificationCode);
-
-        req.flash('success', 'Verification codes sent to your email and mobile. Please verify to complete registration.');
-        res.redirect('/verify');
+        const result = await sendVerificationMobile(mobile);
+        if (result.status === 200) {
+            req.flash('success', 'Verification codes sent to your email and mobile. Please verify to complete registration.');
+            localStorage.setItem('verificationId', result.data.verificationId);
+            res.redirect('/verify');
+        } else {
+            req.flash('error', result.error);
+            res.redirect('/signup');
+        }
     } catch (e) {
         req.flash('error', e.message);
         console.log(e);
@@ -190,7 +233,13 @@ app.get('/verify', (req, res) => {
 });
 
 app.post('/verify', async (req, res) => {
-    const { email, emailCode, mobile, mobileCode } = req.body;
+    const { email, emailCode, mobile, otp } = req.body;
+    const verificationId = localStorage.getItem('verificationId');
+
+    if (!verificationId) {
+        req.flash('error', 'Verification ID not found.');
+        return res.redirect('/verify');
+    }
 
     try {
         const tempUser = await TempUser.findOne({ email, mobile });
@@ -203,39 +252,42 @@ app.post('/verify', async (req, res) => {
         // Check email verification code and expiry
         if (tempUser.emailVerificationCode === emailCode && tempUser.emailVerificationExpires > Date.now()) {
             tempUser.isEmailVerified = true;
-            tempUser.isMobileVerified = true;
         } else {
             req.flash('error', 'Invalid or expired email verification code.');
             return res.redirect('/verify');
         }
 
-        // Check mobile verification code and expiry
-        // if (tempUser.mobileVerificationCode === mobileCode && tempUser.mobileVerificationExpires > Date.now()) {
-        //     tempUser.isMobileVerified = true;
-        // } else {
-        //     req.flash('error', 'Invalid or expired mobile verification code.');
-        //     return res.redirect('/verify');
-        // }
-        
-        const newUser = new User({
-            email: tempUser.email,
-            username: tempUser.username,
-            firstName: tempUser.firstName,
-            middleName: tempUser.middleName,
-            lastName: tempUser.lastName,
-            dob: tempUser.dob,
-            mobile: tempUser.mobile,
-            isEmailVerified: tempUser.isEmailVerified,
-            isMobileVerified: tempUser.isMobileVerified,
-        });
-        console.log(tempUser);
-        let registeredUser = await User.register(newUser, tempUser.password);
-        console.log(registeredUser);
+        // Verify the OTP using the verificationId
+        const phoneAuthProvider = new admin.auth.PhoneAuthProvider(auth);
+        const credential = phoneAuthProvider.credential(verificationId, otp);
 
-        await TempUser.deleteMany({ email, mobile });
+        const userRecord = await admin.auth().verifyIdToken(credential);
 
-        req.flash('success', 'Email and Mobile verified successfully. You can now log in.');
-        res.redirect('/login');
+        if (userRecord.phone_number === mobile) {
+            tempUser.isMobileVerified = true;
+
+            const newUser = new User({
+                email: tempUser.email,
+                username: tempUser.username,
+                firstName: tempUser.firstName,
+                middleName: tempUser.middleName,
+                lastName: tempUser.lastName,
+                dob: tempUser.dob,
+                mobile: tempUser.mobile,
+                isEmailVerified: tempUser.isEmailVerified,
+                isMobileVerified: tempUser.isMobileVerified,
+            });
+
+            let registeredUser = await User.register(newUser, tempUser.password);
+
+            await TempUser.deleteMany({ email, mobile });
+
+            req.flash('success', 'Email and Mobile verified successfully. You can now log in.');
+            res.redirect('/login');
+        } else {
+            req.flash('error', 'Invalid OTP or mobile number.');
+            res.redirect('/verify');
+        }
     } catch (e) {
         req.flash('error', e.message);
         res.redirect('/verify');
@@ -248,8 +300,8 @@ app.get('/login', (req, res) => {
 
 app.post('/login', saveRedirectUrl, async (req, res, next) => {
     passport.authenticate("local", async (err, user, info) => {
-        if (err) { 
-            return next(err); 
+        if (err) {
+            return next(err);
         }
         if (!user) {
             req.flash('error', 'Invalid username or password.');
@@ -274,7 +326,7 @@ app.post('/login', saveRedirectUrl, async (req, res, next) => {
 
 app.get("/logout", (req, res, next) => {
     req.logout((err) => {
-        if(err) {
+        if (err) {
             next(err);
         }
         req.flash("success", "You are logged out!");

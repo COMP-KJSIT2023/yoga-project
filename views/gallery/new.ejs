@@ -1,0 +1,84 @@
+<% layout('/layouts/boilerplate') %>
+
+<style>
+    .wrapper {
+        width: 40rem;
+    }
+
+    .login_box {
+        width: 100%;
+    }
+
+    .login-header {
+        width: 20rem;
+    }
+
+    .upload-image {
+        margin-bottom: 1rem;
+    }
+
+    .image-desc {
+        margin-bottom: 1.5rem;
+    }
+
+    .input-submit {
+        height: 2.5rem;
+    }
+
+    .submit-btn {
+        display: flex;
+        justify-content: center;
+    }
+
+    .btn-success {
+        width: 8rem;
+        border-radius: 20px;
+        padding: 8px;
+    }
+</style>
+
+<body>
+    <form method="post" action="/gallery" novalidate class="needs-validation" enctype="multipart/form-data">
+        <div class="wrapper">
+            <div class="login_box">
+                <div class="login-header">
+                    <span>Upload New Photo</span>
+                </div>
+
+                <div class="upload-image">
+                    <label for="image" class="form-label">Upload Image</label>
+                    <input type="file" name="image" id="image" class="form-control" required>
+                    <div class="invalid-feedback">Please upload an image</div>
+                </div>
+
+                <div class="image-desc">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea type="text" id="description" rows="3" name="description" class="form-control" placeholder="Add a short description" required></textarea>
+                    <div class="invalid-feedback">Please enter a short description</div>
+                </div>
+
+                <div class="submit-btn">
+                    <button class="btn btn-success">Submit</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                var forms = document.getElementsByClassName('needs-validation');
+                Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
+</body>
