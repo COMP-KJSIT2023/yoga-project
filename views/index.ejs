@@ -14,7 +14,6 @@
                     <div class="row align-items-center mt-3">
                         <div class="col-sm-12 col-lg-6">
                             <div class="contentt">
-                                <h1>Yoga.Fitnesse</h1>
                                 <ul>
                                     <li>Established in Year 2018</li>
                                     <!-- <li>More than 5000+ people have been benefited till date</li> -->
@@ -81,6 +80,12 @@
                     </div>
                 </div>
             </section>
+            <section class="feedback-section">
+                <div class="feedback-container">
+                    <div class="feedback">
+                    </div>
+                </div>
+            </section>
     </section>
     <script>
         const gallery = document.querySelector('.gallery');
@@ -88,6 +93,8 @@
 
         // Append cloned gallery to the original
         gallery.appendChild(cloneGallery);
+        const cloneGallery2 = gallery.cloneNode(true);
+        gallery.appendChild(cloneGallery2);
 
         // Optional: Scroll the gallery automatically
         let scrollAmount = 0;
@@ -103,5 +110,28 @@
         }
 
         setInterval(scrollGallery, scrollDelay);
+
+        const feedback = document.querySelector('.feedback');
+        const clonefeedback = feedback.cloneNode(true);
+
+        // Append cloned gallery to the original
+        feedback.appendChild(clonefeedback);
+        const clonefeedback2 = feedback.cloneNode(true);
+        feedback.appendChild(clonefeedback2);
+
+        // Optional: Scroll the gallery automatically
+        let scrollAmount2 = 0;
+        const scrollDelay2 = 20; // Adjust the delay for smoothness
+
+        function scrollfeedback() {
+            scrollAmount2 -= 1;
+            gallery.style.transform = `translateX(-${scrollAmount2}px)`;
+
+            if (scrollAmount2 % gallery.offsetWidth === 0) {
+                scrollAmount2 = 0;
+            }
+        }
+
+        setInterval(scrollfeedback, scrollDelay2);
     </script>
 </body>

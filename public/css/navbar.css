@@ -13,13 +13,10 @@ header {
 
 .logo {
   float: left;
-  text-align: center;
-  line-height: 60px;
-  font-size: 2rem;
-  padding: 0 20px;
-  color: #069370;
-  font-weight: 700;
-  text-decoration: none;
+}
+
+.logo img{
+  max-height: 3.8rem;
 }
 
 nav {
